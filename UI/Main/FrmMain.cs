@@ -32,6 +32,7 @@ namespace hygge_imaotai
             _pages.Add(new UserPageHome(this));
             _pages.Add(new UserPageAccounts(this));
             _pages.Add(new UserPageCommodities(this));
+            _pages.Add(new UserPageShops(this));
             _pages.ForEach(i => i.Dock = DockStyle.Fill);
         }
 

@@ -8,6 +8,10 @@
         /// </summary>
         public string getSessionId { get; set; }
 
+        /// <summary>
+        /// 获取门店列表URL的预先请求
+        /// </summary>
+        public string preRequestShopList { get; set; }
         #endregion
     }
 }

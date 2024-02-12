@@ -1,3 +1,4 @@
 {
-  "getSessionId": "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/index/session/get/"
+  "getSessionId": "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/index/session/get/",
+  "preRequestShopList": "https://static.moutai519.com.cn/mt-backend/xhr/front/mall/resource/get"
 }

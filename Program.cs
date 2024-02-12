@@ -16,9 +16,9 @@ namespace hygge_imaotai
         {
             // 数据库创建
             DatabaseRepository.CreateDatabase();
-            var tables = new[] { typeof(User), typeof(Commodity), typeof(Log) };
+            var tables = new[] { typeof(User), typeof(Commodity), typeof(Log), typeof(Shop) };
             DB.Sqlite.CodeFirst.SyncStructure(tables);
-            
+
             // 网络请求类进行处理
             FlurlUtil.FlurlInit();
 

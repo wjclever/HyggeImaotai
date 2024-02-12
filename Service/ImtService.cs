@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Flurl.Http;
 using hygge_imaotai.Config;
@@ -9,6 +11,7 @@ using hygge_imaotai.Database.Model;
 using hygge_imaotai.Service.Vo;
 using hygge_imaotai.Utils;
 using NLog;
+using Sunny.UI;
 
 namespace hygge_imaotai.Service
 {
@@ -22,6 +25,10 @@ namespace hygge_imaotai.Service
         /// 日志工具类
         /// </summary>
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        /// <summary>
+        /// 数据库操作对象
+        /// </summary>
+        private static readonly IFreeSql Db = DB.Sqlite;
 
         #endregion
 
@@ -36,6 +43,36 @@ namespace hygge_imaotai.Service
             ConfigurationUtil.SaveConfig<CommonConfiguration>();
             // 刷新商品列表
             await GetCurrentSessionId();
+        }
+
+        /// <summary>
+        /// 刷新门店列表
+        /// </summary>
+        /// <returns></returns>
+        public static async Task RefreshShop()
+        {
+            // 获取门店列表的url 预请求
+            var response = await ConfigurationUtil.imaotaiApiConfiguration.preRequestShopList
+                .GetJsonAsync<PreRequestShopListResponseVo>();
+            var shopListUrl = response.data.mtshops_pc.url;
+            // 清空数据库
+            await Db.Delete<Shop>().Where("1=1").ExecuteAffrowsAsync();
+            // 存储shopList
+            var shopList = new List<Shop>();
+            var shopListResponse = await shopListUrl.GetStringAsync();
+            using (var document = JsonDocument.Parse(shopListResponse))
+            {
+                var root = document.RootElement;
+                foreach (var property in root.EnumerateObject())
+                {
+                    var shopId = property.Name;
+                    var shop = Json.Deserialize<ShopResponseVo>(property.Value.GetRawText());
+                    shopList.Add(new Shop(shopId, shop.provinceName, shop.cityName, shop.districtName, shop.fullAddress
+                    , shop.lat + "", shop.lng + "", shop.name, shop.tenantName));
+                }
+            }
+
+            var addRowCount = Db.Insert<Shop>(shopList).ExecuteAffrowsAsync();
         }
 
         /// <summary>
@@ -59,12 +96,12 @@ namespace hygge_imaotai.Service
             // 将SessionId写入文件
             ConfigurationUtil.commonConfigurationInstance.sessionId = response.data.sessionId + "";
             // 删除商品全表数据
-            await DB.Sqlite.Delete<Commodity>().Where("1=1").ExecuteAffrowsAsync();
+            await Db.Delete<Commodity>().Where("1=1").ExecuteAffrowsAsync();
             // 增加数据
             var list = response.data.itemList
                 .Select(item => new Commodity(item.itemCode, item.title, item.content, item.picture))
                 .ToList();
-            var addRowCount = await DB.Sqlite.Insert<Commodity>(list).ExecuteAffrowsAsync();
+            var addRowCount = await Db.Insert<Commodity>(list).ExecuteAffrowsAsync();
             return response.data.sessionId + "";
         }
 

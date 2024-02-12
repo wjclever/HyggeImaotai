@@ -127,10 +127,13 @@
     <Compile Include="Database\DB.cs" />
     <Compile Include="Database\Model\Commodity.cs" />
     <Compile Include="Database\Model\Log.cs" />
+    <Compile Include="Database\Model\Shop.cs" />
     <Compile Include="Database\Model\User.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="Service\ImtService.cs" />
     <Compile Include="Service\Vo\GetSessionIdResponseVo.cs" />
+    <Compile Include="Service\Vo\PreRequestShopListResponseVo.cs" />
+    <Compile Include="Service\Vo\ShopResponseVo.cs" />
     <Compile Include="UI\Main\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
