@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Data.SQLite;
+using System.IO;
 
 namespace hygge_imaotai.Database
 {
@@ -7,13 +8,16 @@ namespace hygge_imaotai.Database
     /// </summary>
     public class DatabaseRepository
     {
+        /// <summary>
+        /// 创建应用程序对应的数据库文件
+        /// </summary>
         public static void CreateDatabase()
         {
             if (File.Exists(Env.DatabasePath)) return;
             // 创建文件夹和数据库
             Directory.CreateDirectory("storage/database");
-            SQLiteConnection.CreateFile(App.DatabasePath);
-            var userConnection = new SQLiteConnection(App.DatabaseConnectStr);
+            SQLiteConnection.CreateFile(Env.DatabasePath);
+            var userConnection = new SQLiteConnection(Env.DatabaseConnectStr);
             userConnection.Open();
         }
 
