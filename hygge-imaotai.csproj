@@ -53,6 +53,18 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Bcl.TimeProvider, Version=8.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.TimeProvider.8.0.0\lib\net462\Microsoft.Bcl.TimeProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>packages\NLog.5.2.8\lib\net46\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Polly, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
+      <HintPath>packages\Polly.8.3.0\lib\net472\Polly.dll</HintPath>
+    </Reference>
+    <Reference Include="Polly.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
+      <HintPath>packages\Polly.Core.8.3.0\lib\net472\Polly.Core.dll</HintPath>
+    </Reference>
     <Reference Include="SunnyUI, Version=3.6.3.0, Culture=neutral, PublicKeyToken=27d7d2e821d97aeb, processorArchitecture=MSIL">
       <HintPath>packages\SunnyUI.3.6.3\lib\net472\SunnyUI.dll</HintPath>
     </Reference>
@@ -63,11 +75,17 @@
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ComponentModel.Annotations.4.5.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.115.5, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.115.5\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Design" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -102,12 +120,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\CommonConfiguration.cs" />
+    <Compile Include="Config\ImaotaiApiConfiguration.cs" />
+    <Compile Include="CustomException.cs" />
     <Compile Include="Database\DatabaseRepository.cs" />
     <Compile Include="Database\DB.cs" />
     <Compile Include="Database\Model\Commodity.cs" />
     <Compile Include="Database\Model\Log.cs" />
     <Compile Include="Database\Model\User.cs" />
     <Compile Include="Env.cs" />
+    <Compile Include="Service\ImtService.cs" />
+    <Compile Include="Service\Vo\GetSessionIdResponseVo.cs" />
     <Compile Include="UI\Main\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,11 +151,11 @@
     <Compile Include="UI\Main\Page\UserPageHome.Designer.cs">
       <DependentUpon>UserPageHome.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Main\Page\UserPageProducts.cs">
+    <Compile Include="UI\Main\Page\UserPageCommodities.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UI\Main\Page\UserPageProducts.Designer.cs">
-      <DependentUpon>UserPageProducts.cs</DependentUpon>
+    <Compile Include="UI\Main\Page\UserPageCommodities.Designer.cs">
+      <DependentUpon>UserPageCommodities.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Main\Page\UserPageShops.cs">
       <SubType>UserControl</SubType>
@@ -140,6 +163,9 @@
     <Compile Include="UI\Main\Page\UserPageShops.Designer.cs">
       <DependentUpon>UserPageShops.cs</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ConfigurationUtil.cs" />
+    <Compile Include="Utils\FlurlUtil.cs" />
+    <Compile Include="Utils\PollyHandler.cs" />
     <EmbeddedResource Include="UI\Main\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -151,6 +177,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="UI\Main\Page\UserPageAccounts.resx">
       <DependentUpon>UserPageAccounts.cs</DependentUpon>
@@ -158,12 +185,18 @@
     <EmbeddedResource Include="UI\Main\Page\UserPageHome.resx">
       <DependentUpon>UserPageHome.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Main\Page\UserPageProducts.resx">
-      <DependentUpon>UserPageProducts.cs</DependentUpon>
+    <EmbeddedResource Include="UI\Main\Page\UserPageCommodities.resx">
+      <DependentUpon>UserPageCommodities.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Main\Page\UserPageShops.resx">
       <DependentUpon>UserPageShops.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="apis.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="nlog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -181,6 +214,19 @@
   <ItemGroup>
     <Content Include=".gitignore" />
     <Content Include="logo-small.ico" />
+    <None Include="Resources\userIcon.png" />
+    <None Include="Resources\sweep-lineIcon.png" />
+    <None Include="Resources\stop.png" />
+    <None Include="Resources\schoolIcon.png" />
+    <None Include="Resources\save.png" />
+    <None Include="Resources\refresh.png" />
+    <None Include="Resources\passwordIcon.png" />
+    <None Include="Resources\paperplaneIcon.png" />
+    <None Include="Resources\magnifyingIcon.png" />
+    <None Include="Resources\launchIcon.png" />
+    <None Include="Resources\descendIcon.png" />
+    <None Include="Resources\changeIcon.png" />
+    <None Include="Resources\ascendIcon.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

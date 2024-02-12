@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Threading.Tasks;
+using Flurl.Http;
 using FreeSql.DataAnnotations;
 
 namespace hygge_imaotai.Database.Model
@@ -35,6 +40,16 @@ namespace hygge_imaotai.Database.Model
 
         #endregion
 
+        #region Dynamic Properties
+
+        /// <summary>
+        /// 动态生成商品图标
+        /// </summary>
+        [Column(IsIgnore = true)]
+        public Image image { get; set; }
+
+        #endregion
+
         #region Constructor
 
         public Commodity(string itemCode, string title, string content, string picture)
@@ -46,6 +61,26 @@ namespace hygge_imaotai.Database.Model
             this.createTime = DateTime.Now;
         }
 
+        #endregion
+
+        #region Functions
+        /// <summary>
+        /// 根据属性picture为属性image赋值图片
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdateImage()
+        {
+            var response = await picture.GetStreamAsync();
+            image = Image.FromStream(response);
+
+            var bitmap = new Bitmap(70, 60,PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.DrawImage(image, 0, 0, 70, 60);
+            }
+            image = bitmap;
+        }
         #endregion
 
     }
